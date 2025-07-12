@@ -23,3 +23,10 @@ val BackgroundLight = Color(0xFFF1FDF4)
 val SurfaceLight = Color.White
 val OnBackgroundLight = Color(0xFF1B1B1B)
 val OnSurfaceLight = Color(0xFF1B1B1B)
+
+// my colors
+val primaryColor = Color(0xFFBBFF00)
+val secondaryColor = Color(0xFFB37A00)
+val backgroundColor = Color(0xFF1A1A1A)
+val surfaceColor = Color(0xFF474747)
+val sweetBlue = Color(0xFF2196F3)

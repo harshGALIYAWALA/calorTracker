@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shinkatech.calortracker.View.onBoardScreens.OnboardingScreens
+import com.shinkatech.calortracker.View.questionsScreens.QuesScreen
 import com.shinkatech.calortracker.View.splashScreen.SplashScreen
 
 
@@ -19,13 +20,17 @@ fun MainApp() {
     ) {
         val navController = rememberNavController()
 
-        NavHost(navController = navController, startDestination = "SplashScreen") {
+        NavHost(navController = navController, startDestination = "QuesScreen") {
             composable("SplashScreen") {
                 SplashScreen(navController)
             }
 //
             composable("Onboarding") {
                 OnboardingScreens(navController)
+            }
+
+            composable("QuesScreen") {
+                QuesScreen(navController)
             }
         }
     }

@@ -1,12 +1,10 @@
 package com.shinkatech.calortracker.View.onBoardScreens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoneyOffCsred
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -16,15 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.shinkatech.calortracker.R // Assuming you have a drawable named 'onboarding_free'
+import androidx.navigation.NavController
 
 
 @Composable
-fun OnBoardScreen4() {
+fun OnBoardScreen4(navController: NavController) {
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -69,7 +66,9 @@ fun OnBoardScreen4() {
         ) {
             Button(
                 onClick = {
-                    TODO()
+                    navController.navigate("QuesScreen") {
+                        popUpTo("SplashScreen") { inclusive = true } // ✅ correct casing
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4E8E51)), // Green button
                 modifier = Modifier

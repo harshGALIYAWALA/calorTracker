@@ -19,7 +19,7 @@ fun OnboardingScreens(
         { OnBoardScreen1() },  //
         { OnBoardScreen2() },   //
         { OnBoardScreen3() },
-        { OnBoardScreen4() }
+        { OnBoardScreen4(navController) }
     )
 
     val colors = listOf(
