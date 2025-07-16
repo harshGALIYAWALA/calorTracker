@@ -1,7 +1,14 @@
-package com.shinkatech.calortracker.View.authScreen.signInScreen
+package com.shinkatech.calortracker.View.authScreen.loginScreen
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,15 +16,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ElectricBolt
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.FitnessCenter
+import androidx.compose.material.icons.filled.LocalDining
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -40,6 +52,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -50,21 +64,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.shinkatech.calortracker.ui.theme.CalorTrackerTheme
-import androidx.compose.material.icons.filled.FitnessCenter
-import androidx.compose.material.icons.filled.LocalDining
-import androidx.compose.material.icons.filled.Timeline
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.scale
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
-fun SignInScreen(navController: NavHostController) {
-
+fun LoginScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -199,7 +203,7 @@ fun SignInScreen(navController: NavHostController) {
                     }
 
                     Spacer(modifier = Modifier.width(24.dp))
-                     // row text
+                    // row text
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -239,14 +243,14 @@ fun SignInScreen(navController: NavHostController) {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "Welcome",
+                                    text = "Log In",
                                     style = MaterialTheme.typography.headlineMedium.copy(
                                         fontWeight = FontWeight.Bold
                                     ),
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
                                 Text(
-                                    text = "Sign in to your account",
+                                    text = "Get ready to track your calories",
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                                 )
@@ -339,65 +343,10 @@ fun SignInScreen(navController: NavHostController) {
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
 
-                                // confirm password
-                                OutlinedTextField(
-                                    value = confirmPassword,
-                                    onValueChange = { confirmPassword = it },
-                                    label = { Text(text = "confirmPassword") },
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    shape = RoundedCornerShape(30.dp),
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Default.Lock,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
-                                        )
-                                    },
-                                    colors = OutlinedTextFieldDefaults.colors(
-                                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground.copy(
-                                            alpha = 0.5f
-                                        ),
-                                        focusedTextColor = MaterialTheme.colorScheme.primary,
-                                        unfocusedTextColor = MaterialTheme.colorScheme.primary,
-                                        cursorColor = MaterialTheme.colorScheme.primary,
-                                        focusedLabelColor = MaterialTheme.colorScheme.primary,
-                                        unfocusedLabelColor = MaterialTheme.colorScheme.onBackground.copy(
-                                            alpha = 0.5f
-                                        ),
-                                    ),
-                                    maxLines = 1,
-                                    singleLine = true,
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Password,
-                                        imeAction = ImeAction.Done
-                                    ),
-                                    trailingIcon = {
-                                        IconButton(onClick = {
-                                            confirmPasswordVisibility = !confirmPasswordVisibility
-                                        }) {
-                                            Icon(
-                                                imageVector = confirmPasswordIcon,
-                                                contentDescription = null,
-                                                tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
-                                            )
-                                        }
-                                    },
-                                    visualTransformation = if (confirmPasswordVisibility) VisualTransformation.None
-                                    else PasswordVisualTransformation()
-                                )
-
                                 Spacer(modifier = Modifier.height(22.dp))
 
                                 Button(
-                                    onClick = {
-                                        navController.navigate("LoginScreen"){
-                                            popUpTo("LoginScreen"){
-                                                inclusive = true
-                                            }
-                                        }
-                                    },
+                                    onClick = {},
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp),
@@ -410,7 +359,7 @@ fun SignInScreen(navController: NavHostController) {
                                     shape = RoundedCornerShape(30.dp)
                                 ) {
                                     Text(
-                                        text = "Sign in",
+                                        text = "Login",
                                         style = MaterialTheme.typography.bodyLarge.copy(
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.onPrimary
@@ -502,7 +451,7 @@ fun SignInScreen(navController: NavHostController) {
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     Text(
-                                        text = "Already have account?",
+                                        text = "Don't have account?",
                                         style = MaterialTheme.typography.bodyMedium.copy(
                                             color = MaterialTheme.colorScheme.onBackground
                                         ),
@@ -518,7 +467,7 @@ fun SignInScreen(navController: NavHostController) {
                                             contentColor = MaterialTheme.colorScheme.primary
                                         )
                                     ) {
-                                        Text("Login")
+                                        Text("SignIn")
                                     }
                                 }
                             }
@@ -528,6 +477,4 @@ fun SignInScreen(navController: NavHostController) {
             }
         }
     }
-
 }
-
