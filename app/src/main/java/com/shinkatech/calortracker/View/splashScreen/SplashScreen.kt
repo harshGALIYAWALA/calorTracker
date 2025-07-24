@@ -16,6 +16,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.shinkatech.calortracker.R
+import com.shinkatech.calortracker.Screen
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
@@ -43,8 +44,9 @@ fun SplashScreen(navController: NavHostController) {
 
     LaunchedEffect(key1 = progress) {
        if (progress == 1f){
-           navController.navigate("Onboarding") {
-               popUpTo("SplashScreen") { inclusive = true }
+           navController.navigate("Onboarding"){
+               popUpTo(Screen.SPLASH_SCREEN){ inclusive = true }
+               launchSingleTop = true
            }
        }
     }

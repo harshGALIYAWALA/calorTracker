@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-07-16T09:28:30.355032600Z">
+        <DropdownSelection timestamp="2025-07-24T04:04:56.949739600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\HARSH\.android\avd\mini-verdion.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=a6936c54" />
             </handle>
           </Target>
         </DropdownSelection>

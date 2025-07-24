@@ -63,6 +63,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.shinkatech.calortracker.Screen
 import com.shinkatech.calortracker.ui.theme.CalorTrackerTheme
 import kotlin.math.cos
 import kotlin.math.sin
@@ -346,7 +347,11 @@ fun LoginScreen(navController: NavHostController) {
                                 Spacer(modifier = Modifier.height(22.dp))
 
                                 Button(
-                                    onClick = {},
+                                    onClick = {
+                                        navController.navigate(Screen.MAIN_LAYOUT){
+                                            popUpTo(0)
+                                        }
+                                    },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(50.dp),
@@ -459,8 +464,7 @@ fun LoginScreen(navController: NavHostController) {
                                     )
                                     TextButton(
                                         onClick = {
-                                            // TODO: Add navigation to login screen here
-                                            // e.g., navController.navigate("login")
+                                            navController.navigate(Screen.SIGN_IN_SCREEN)
                                         },
                                         modifier = Modifier,
                                         colors = ButtonDefaults.textButtonColors(

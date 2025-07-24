@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.shinkatech.calortracker.Screen
 import com.shinkatech.calortracker.ui.theme.CalorTrackerTheme
 
 
@@ -386,8 +387,9 @@ fun QuesScreen(navController: NavHostController) {
                 // Submit Button
                 Button(
                     onClick = {
-                        navController.navigate("SignInScreen") {
-                            popUpTo("QuesScreen") { inclusive = true }
+                        navController.navigate("SignInScreen"){
+                            popUpTo(Screen.QUESTIONS_SCREEN){ inclusive = true }
+                            launchSingleTop = true
                         }
                     },
                     modifier = Modifier

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.shinkatech.calortracker.Screen
 
 
 @Composable
@@ -66,8 +67,9 @@ fun OnBoardScreen4(navController: NavController) {
         ) {
             Button(
                 onClick = {
-                    navController.navigate("QuesScreen") {
-                        popUpTo("SplashScreen") { inclusive = true } // ✅ correct casing
+                    navController.navigate("QuesScreen"){
+                        popUpTo(Screen.ONBOARDING_SCREEN){ inclusive = true }
+                        launchSingleTop = true
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4E8E51)), // Green button

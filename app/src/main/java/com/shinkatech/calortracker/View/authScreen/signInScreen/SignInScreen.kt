@@ -59,13 +59,14 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import com.shinkatech.calortracker.Screen
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
 fun SignInScreen(navController: NavHostController) {
 
-    var email by remember { mutableStateOf("") }
+     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
@@ -392,11 +393,7 @@ fun SignInScreen(navController: NavHostController) {
 
                                 Button(
                                     onClick = {
-                                        navController.navigate("LoginScreen"){
-                                            popUpTo("LoginScreen"){
-                                                inclusive = true
-                                            }
-                                        }
+                                        navController.navigate(Screen.LOGIN_SCREEN)
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -510,8 +507,7 @@ fun SignInScreen(navController: NavHostController) {
                                     )
                                     TextButton(
                                         onClick = {
-                                            // TODO: Add navigation to login screen here
-                                            // e.g., navController.navigate("login")
+                                            navController.navigate(Screen.LOGIN_SCREEN)
                                         },
                                         modifier = Modifier,
                                         colors = ButtonDefaults.textButtonColors(
