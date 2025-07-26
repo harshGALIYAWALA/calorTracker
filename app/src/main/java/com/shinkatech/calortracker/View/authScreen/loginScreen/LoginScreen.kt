@@ -349,7 +349,9 @@ fun LoginScreen(navController: NavHostController) {
                                 Button(
                                     onClick = {
                                         navController.navigate(Screen.MAIN_LAYOUT){
-                                            popUpTo(0)
+                                            popUpTo(0){
+                                                inclusive = true
+                                            }
                                         }
                                     },
                                     modifier = Modifier

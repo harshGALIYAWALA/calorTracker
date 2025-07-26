@@ -13,17 +13,5 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun ProfileScreen(navController: NavHostController) {
-    Scaffold {
-        Column(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize()
-        ) {
-            Text(
-                text = "hello this is profile screen",
-                modifier = Modifier.padding(16.dp),
-                maxLines = 1
-            )
-        }
-    }
+
 }

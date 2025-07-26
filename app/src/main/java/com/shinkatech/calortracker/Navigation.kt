@@ -41,7 +41,7 @@ fun MainApp() {
     ) {
         val navController = rememberNavController()
 
-        NavHost(navController = navController, startDestination = Screen.MAIN_LAYOUT) {
+        NavHost(navController = navController, startDestination = Screen.SIGN_IN_SCREEN) {
 
             composable(Screen.SPLASH_SCREEN) {
                 SplashScreen(navController)
