@@ -1,5 +1,6 @@
 package com.shinkatech.calortracker.View.authScreen.loginScreen
 
+import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -20,9 +21,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ElectricBolt
 import androidx.compose.material.icons.filled.Email
@@ -55,6 +58,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -62,19 +66,28 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.shinkatech.calortracker.Screen
 import com.shinkatech.calortracker.ui.theme.CalorTrackerTheme
 import kotlin.math.cos
 import kotlin.math.sin
 
+
 @Composable
 fun LoginScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
     var confirmPasswordVisibility by remember { mutableStateOf(false) }
+
+    // error message
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+
+    val context = LocalContext.current.applicationContext
+
+    val viewModel : LoginScreenViewModel = hiltViewModel()
 
     var passwordIcon = if (passwordVisibility) {
         Icons.Default.Visibility
@@ -82,11 +95,6 @@ fun LoginScreen(navController: NavHostController) {
         Icons.Default.VisibilityOff
     }
 
-    var confirmPasswordIcon = if (confirmPasswordVisibility) {
-        Icons.Default.Visibility
-    } else {
-        Icons.Default.VisibilityOff
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize()
@@ -230,7 +238,9 @@ fun LoginScreen(navController: NavHostController) {
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                     ) {
                         Box(
                             modifier = Modifier
@@ -290,7 +300,13 @@ fun LoginScreen(navController: NavHostController) {
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Email,
                                         imeAction = ImeAction.Next
-                                    )
+                                    ),
+                                    isError = emailError != null,
+                                    supportingText = {
+                                        emailError?.let {
+                                            Text(text = it , color = MaterialTheme.colorScheme.error)
+                                        }
+                                    }
                                 )
 
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -340,7 +356,13 @@ fun LoginScreen(navController: NavHostController) {
                                         }
                                     },
                                     visualTransformation = if (passwordVisibility) VisualTransformation.None
-                                    else PasswordVisualTransformation()
+                                    else PasswordVisualTransformation(),
+                                    isError = passwordError != null,
+                                    supportingText = {
+                                        passwordError?.let {
+                                            Text(text = it , color = MaterialTheme.colorScheme.error)
+                                        }
+                                    }
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -348,11 +370,38 @@ fun LoginScreen(navController: NavHostController) {
 
                                 Button(
                                     onClick = {
-                                        navController.navigate(Screen.MAIN_LAYOUT){
-                                            popUpTo(0){
-                                                inclusive = true
+                                        val isValid = viewModel.validateLoginField(
+                                            email = email,
+                                            password = password,
+                                            setEmailError = { emailError = it },
+                                            setPasswordError = { passwordError = it }
+                                        )
+
+                                        if (isValid){
+
+                                            viewModel.loginWithemailAndPassword(
+                                                email,
+                                                password,
+                                                onSucess = {
+                                                    Toast.makeText(context, "login in sucessfull", Toast.LENGTH_SHORT).show()
+                                                    navController.navigate(Screen.MAIN_LAYOUT){
+                                                        popUpTo(Screen.MAIN_LAYOUT){
+                                                            inclusive = true
+                                                        }
+                                                    }
+                                                },
+                                                onfailure = {
+                                                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                                                }
+                                            )
+
+                                            navController.navigate(Screen.MAIN_LAYOUT){
+                                                popUpTo(0){
+                                                    inclusive = true
+                                                }
                                             }
                                         }
+
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()

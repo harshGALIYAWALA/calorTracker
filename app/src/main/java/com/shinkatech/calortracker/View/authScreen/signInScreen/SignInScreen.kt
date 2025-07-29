@@ -1,5 +1,7 @@
 package com.shinkatech.calortracker.View.authScreen.signInScreen
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 
 import androidx.compose.foundation.layout.Box
@@ -56,21 +58,37 @@ import androidx.compose.material.icons.filled.Timeline
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shinkatech.calortracker.Screen
+import com.shinkatech.calortracker.View.questionsScreens.QuesScreenViewModel
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
 fun SignInScreen(navController: NavHostController) {
 
-     var email by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisibility by remember { mutableStateOf(false) }
     var confirmPasswordVisibility by remember { mutableStateOf(false) }
+
+    var signInViewModel: SignInScreenViewModel = hiltViewModel()
+    var quesViewModel: QuesScreenViewModel = hiltViewModel()
+
+
+    // Error state variables
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var confirmPasswordError by remember { mutableStateOf<String?>(null) }
+
+    val context = LocalContext.current.applicationContext
 
     var passwordIcon = if (passwordVisibility) {
         Icons.Default.Visibility
@@ -182,7 +200,10 @@ fun SignInScreen(navController: NavHostController) {
                                 initialValue = 0.8f,
                                 targetValue = 1.2f,
                                 animationSpec = infiniteRepeatable(
-                                    animation = tween(2000 + index * 500, easing = FastOutSlowInEasing),
+                                    animation = tween(
+                                        2000 + index * 500,
+                                        easing = FastOutSlowInEasing
+                                    ),
                                     repeatMode = RepeatMode.Reverse
                                 )
                             )
@@ -200,7 +221,7 @@ fun SignInScreen(navController: NavHostController) {
                     }
 
                     Spacer(modifier = Modifier.width(24.dp))
-                     // row text
+                    // row text
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
@@ -227,6 +248,7 @@ fun SignInScreen(navController: NavHostController) {
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                     ) {
                         Box(
                             modifier = Modifier
@@ -286,7 +308,13 @@ fun SignInScreen(navController: NavHostController) {
                                     keyboardOptions = KeyboardOptions(
                                         keyboardType = KeyboardType.Email,
                                         imeAction = ImeAction.Next
-                                    )
+                                    ),
+                                    isError = emailError != null,
+                                    supportingText = {
+                                        emailError?.let {
+                                            Text(text = it, color = MaterialTheme.colorScheme.error)
+                                        }
+                                    }
                                 )
 
                                 Spacer(modifier = Modifier.height(8.dp))
@@ -336,7 +364,13 @@ fun SignInScreen(navController: NavHostController) {
                                         }
                                     },
                                     visualTransformation = if (passwordVisibility) VisualTransformation.None
-                                    else PasswordVisualTransformation()
+                                    else PasswordVisualTransformation(),
+                                    isError = passwordError != null,
+                                    supportingText = {
+                                        passwordError?.let {
+                                            Text(text = it, color = MaterialTheme.colorScheme.error)
+                                        }
+                                    }
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -386,14 +420,62 @@ fun SignInScreen(navController: NavHostController) {
                                         }
                                     },
                                     visualTransformation = if (confirmPasswordVisibility) VisualTransformation.None
-                                    else PasswordVisualTransformation()
+                                    else PasswordVisualTransformation(),
+                                    isError = confirmPasswordError != null,
+                                    supportingText = {
+                                        confirmPasswordError?.let {
+                                            Text(text = it, color = MaterialTheme.colorScheme.error)
+                                        }
+                                    }
                                 )
 
                                 Spacer(modifier = Modifier.height(22.dp))
 
                                 Button(
                                     onClick = {
-                                        navController.navigate(Screen.LOGIN_SCREEN)
+                                        val isValid = signInViewModel.validateFields(
+                                            email,
+                                            password,
+                                            confirmPassword,
+                                            { emailError = it },
+                                            { passwordError = it },
+                                            { confirmPasswordError = it }
+                                        )
+
+                                        if (isValid) {
+                                            signInViewModel.usersigIn(
+                                                email,
+                                                password,
+                                                onSuccess = {
+                                                    val uid = signInViewModel.auth.currentUser?.uid
+                                                    if (uid != null) {
+                                                        signInViewModel.saveUserDataToFireStore(
+                                                            uid,
+                                                            email = email,
+                                                            password = password,
+                                                            onSuccess = {
+                                                                Toast.makeText(context, "Account Created & Data Saved", Toast.LENGTH_SHORT).show()
+                                                                navController.navigate(Screen.LOGIN_SCREEN)
+                                                            },
+                                                            onFailure = {
+                                                                Toast.makeText(context, "Account Created, but failed to save data: $it", Toast.LENGTH_LONG).show()
+                                                            }
+                                                        )
+                                                    }
+                                                    Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
+                                                    Log.d("dataFinal", "data before ${quesViewModel.getTempData()}")
+                                                    quesViewModel.deleteTempData()
+                                                    Log.d("dataFinal", "data before ${quesViewModel.getTempData()}")
+                                                    navController.navigate(Screen.LOGIN_SCREEN)
+                                                },
+                                                onFailure = {
+                                                    Toast.makeText(context, it, Toast.LENGTH_SHORT)
+                                                        .show()
+                                                }
+                                            )
+                                        }
+
+
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -526,4 +608,3 @@ fun SignInScreen(navController: NavHostController) {
     }
 
 }
-

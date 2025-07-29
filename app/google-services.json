@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "900362602753",
+    "project_id": "calor-tracker",
+    "storage_bucket": "calor-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900362602753:android:645da541eefad0aac8f300",
+        "android_client_info": {
+          "package_name": "com.shinkatech.calortracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs5FCKyEyBC69cQ7QnLHajp1GE5vZIBIY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,12 +15,14 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.google.firebase.auth.FirebaseAuth
 import com.shinkatech.calortracker.R
 import com.shinkatech.calortracker.Screen
 
 @Composable
 fun SplashScreen(navController: NavHostController) {
 
+    val auth = FirebaseAuth.getInstance().currentUser
 
     val composition by rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.splash_animation)
@@ -44,9 +46,16 @@ fun SplashScreen(navController: NavHostController) {
 
     LaunchedEffect(key1 = progress) {
        if (progress == 1f){
-           navController.navigate("Onboarding"){
-               popUpTo(Screen.SPLASH_SCREEN){ inclusive = true }
-               launchSingleTop = true
+           if (auth != null) {
+               // User is logged in — navigate to Main or Home screen
+               navController.navigate(Screen.MAIN_LAYOUT) {
+                   popUpTo(Screen.MAIN_LAYOUT) { inclusive = true }
+               }
+           } else {
+               // User is not logged in — navigate to SignIn screen
+               navController.navigate(Screen.ONBOARDING_SCREEN) {
+                   popUpTo(Screen.SPLASH_SCREEN) { inclusive = true }
+               }
            }
        }
     }

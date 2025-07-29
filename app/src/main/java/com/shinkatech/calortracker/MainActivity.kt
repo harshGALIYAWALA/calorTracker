@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
 import com.shinkatech.calortracker.ui.theme.CalorTrackerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -17,6 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CalorTrackerTheme {
+                FirebaseApp.initializeApp(this)
                 MainApp()
             }
         }

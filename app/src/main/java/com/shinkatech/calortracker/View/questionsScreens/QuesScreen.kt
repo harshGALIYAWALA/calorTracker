@@ -1,6 +1,7 @@
 package com.shinkatech.calortracker.View.questionsScreens
 
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,14 +12,17 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.shinkatech.calortracker.Screen
 import com.shinkatech.calortracker.ui.theme.CalorTrackerTheme
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.shinkatech.calortracker.Model.QuesDataUserModel
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,6 +39,17 @@ fun QuesScreen(navController: NavHostController) {
         var targetDate by remember { mutableStateOf("") }
         var activityLevel by remember { mutableStateOf("") }
 
+        // Error state variables
+        var nameError by remember { mutableStateOf<String?>(null) }
+        var ageError by remember { mutableStateOf<String?>(null) }
+        var genderError by remember { mutableStateOf<String?>(null) }
+        var heightError by remember { mutableStateOf<String?>(null) }
+        var weightError by remember { mutableStateOf<String?>(null) }
+        var fitnessGoalError by remember { mutableStateOf<String?>(null) }
+        var targetDateError by remember { mutableStateOf<String?>(null) }
+        var activityLevelError by remember { mutableStateOf<String?>(null) }
+
+
         val genderOptions = listOf("Male", "Female")
         val fitnessGoalOptions = listOf("Lose weight", "Maintain weight", "Gain weight/muscle")
         val activityLevelOptions = listOf(
@@ -49,6 +64,8 @@ fun QuesScreen(navController: NavHostController) {
         var genderExpanded by remember { mutableStateOf(false) }
         var fitnessGoalExpanded by remember { mutableStateOf(false) }
         var activityLevelExpanded by remember { mutableStateOf(false) }
+
+        val viewModel: QuesScreenViewModel = hiltViewModel() // Use hiltViewModel() function
 
         LazyColumn(
             modifier = Modifier
@@ -80,7 +97,10 @@ fun QuesScreen(navController: NavHostController) {
                 // Name Input
                 OutlinedTextField(
                     value = name,
-                    onValueChange = { name = it },
+                    onValueChange = {
+                        name = it
+                        nameError = null // Clear error on change
+                    },
                     label = { Text("Full Name") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -106,12 +126,19 @@ fun QuesScreen(navController: NavHostController) {
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
                     ),
+                    isError = nameError != null,
+                    supportingText = {
+                        nameError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 // Age Input
                 OutlinedTextField(
                     value = age,
-                    onValueChange = { if (it.all { char -> char.isDigit() }) age = it },
+                    onValueChange = {
+                        if (it.all { char -> char.isDigit() }) age = it
+                        ageError = null // Clear error on change
+                    },
                     label = { Text("Age") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -137,6 +164,10 @@ fun QuesScreen(navController: NavHostController) {
                     },
                     maxLines = 1,
                     singleLine = true,
+                    isError = ageError != null,
+                    supportingText = {
+                        ageError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 // Gender Dropdown
@@ -163,7 +194,11 @@ fun QuesScreen(navController: NavHostController) {
                             focusedLabelColor = MaterialTheme.colorScheme.primary,
                             unfocusedLabelColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                         ),
-                        shape = RoundedCornerShape(30.dp)
+                        shape = RoundedCornerShape(30.dp),
+                        isError = genderError != null,
+                        supportingText = {
+                            genderError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                        }
                     )
 
                     ExposedDropdownMenu(
@@ -173,10 +208,16 @@ fun QuesScreen(navController: NavHostController) {
                     ) {
                         genderOptions.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(option, color = MaterialTheme.colorScheme.primary) },
+                                text = {
+                                    Text(
+                                        option,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
                                 onClick = {
                                     gender = option
                                     genderExpanded = false
+                                    genderError = null // Clear error on selection
                                 }
                             )
                         }
@@ -193,7 +234,10 @@ fun QuesScreen(navController: NavHostController) {
                     // Height Input
                     OutlinedTextField(
                         value = height,
-                        onValueChange = { height = it },
+                        onValueChange = {
+                            height = it
+                            heightError = null // Clear error on change
+                        },
                         label = { Text("Height (cm)") },
                         modifier = Modifier.weight(1f),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -211,13 +255,20 @@ fun QuesScreen(navController: NavHostController) {
                             imeAction = ImeAction.Next
                         ),
                         maxLines = 1,
-                        singleLine = true
+                        singleLine = true,
+                        isError = heightError != null,
+                        supportingText = {
+                            heightError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                        }
                     )
 
                     // Weight Input
                     OutlinedTextField(
                         value = weight,
-                        onValueChange = { weight = it },
+                        onValueChange = {
+                            weight = it
+                            weightError = null // Clear error on change
+                        },
                         label = { Text("Weight (kg)") },
                         modifier = Modifier.weight(1f),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -235,7 +286,11 @@ fun QuesScreen(navController: NavHostController) {
                             imeAction = ImeAction.Next
                         ),
                         maxLines = 1,
-                        singleLine = true
+                        singleLine = true,
+                        isError = weightError != null,
+                        supportingText = {
+                            weightError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                        }
                     )
                 }
 
@@ -273,6 +328,15 @@ fun QuesScreen(navController: NavHostController) {
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                             )
+                        },
+                        isError = fitnessGoalError != null,
+                        supportingText = {
+                            fitnessGoalError?.let {
+                                Text(
+                                    it,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         }
                     )
 
@@ -283,10 +347,16 @@ fun QuesScreen(navController: NavHostController) {
                     ) {
                         fitnessGoalOptions.forEach { option ->
                             DropdownMenuItem(
-                                text = { Text(option, color = MaterialTheme.colorScheme.onSurface) },
+                                text = {
+                                    Text(
+                                        option,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                },
                                 onClick = {
                                     fitnessGoal = option
                                     fitnessGoalExpanded = false
+                                    fitnessGoalError = null // Clear error on selection
                                 }
                             )
                         }
@@ -296,7 +366,10 @@ fun QuesScreen(navController: NavHostController) {
                 // Target Date Input
                 OutlinedTextField(
                     value = targetDate,
-                    onValueChange = { targetDate = it },
+                    onValueChange = {
+                        targetDate = it
+                        targetDateError = null // Clear error on change
+                    },
                     label = { Text("Target Date (DD/MM/YYYY)") },
                     modifier = Modifier.fillMaxWidth(),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -321,7 +394,11 @@ fun QuesScreen(navController: NavHostController) {
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Next
-                    )
+                    ),
+                    isError = targetDateError != null,
+                    supportingText = {
+                        targetDateError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    }
                 )
 
                 // Activity Level Section
@@ -358,6 +435,15 @@ fun QuesScreen(navController: NavHostController) {
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
                             )
+                        },
+                        isError = activityLevelError != null,
+                        supportingText = {
+                            activityLevelError?.let {
+                                Text(
+                                    it,
+                                    color = MaterialTheme.colorScheme.error
+                                )
+                            }
                         }
                     )
 
@@ -378,6 +464,7 @@ fun QuesScreen(navController: NavHostController) {
                                 onClick = {
                                     activityLevel = option
                                     activityLevelExpanded = false
+                                    activityLevelError = null // Clear error on selection
                                 }
                             )
                         }
@@ -387,9 +474,51 @@ fun QuesScreen(navController: NavHostController) {
                 // Submit Button
                 Button(
                     onClick = {
-                        navController.navigate("SignInScreen"){
-                            popUpTo(Screen.QUESTIONS_SCREEN){ inclusive = true }
-                            launchSingleTop = true
+                        // Reset all errors before validation
+                        nameError = null
+                        ageError = null
+                        genderError = null
+                        heightError = null
+                        weightError = null
+                        fitnessGoalError = null
+                        targetDateError = null
+                        activityLevelError = null
+
+                        val isValid = validateFields(
+                            name,
+                            age,
+                            gender,
+                            height,
+                            weight,
+                            fitnessGoal,
+                            targetDate,
+                            activityLevel,
+                            setNameError = { nameError = it },
+                            setAgeError = { ageError = it },
+                            setGenderError = { genderError = it },
+                            setHeightError = { heightError = it },
+                            setWeightError = { weightError = it },
+                            setFitnessGoalError = { fitnessGoalError = it },
+                            setTargetDateError = { targetDateError = it },
+                            setActivityLevelError = { activityLevelError = it }
+                        )
+
+                        if (isValid) {
+                            val data = QuesDataUserModel(
+                                name,
+                                age,
+                                gender,
+                                height,
+                                weight,
+                                fitnessGoal,
+                                targetDate,
+                                activityLevel
+                            )
+                            viewModel.saveTempData(data)
+                            Log.d("quesScreen", "QuesScreen: $data")
+                            navController.navigate("SignInScreen") {
+                                launchSingleTop = true
+                            }
                         }
                     },
                     modifier = Modifier
@@ -397,7 +526,6 @@ fun QuesScreen(navController: NavHostController) {
                         .padding(top = 24.dp)
                         .height(56.dp),
                     colors = ButtonDefaults.buttonColors(
-//                        containerColor = MaterialTheme.colorScheme.primary
                         containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.9f),
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
@@ -423,4 +551,106 @@ private fun SectionHeader(title: String) {
         fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
     )
+}
+
+private fun validateFields(
+    name: String,
+    age: String,
+    gender: String,
+    height: String,
+    weight: String,
+    fitnessGoal: String,
+    targetDate: String,
+    activityLevel: String,
+    setNameError: (String?) -> Unit,
+    setAgeError: (String?) -> Unit,
+    setGenderError: (String?) -> Unit,
+    setHeightError: (String?) -> Unit,
+    setWeightError: (String?) -> Unit,
+    setFitnessGoalError: (String?) -> Unit,
+    setTargetDateError: (String?) -> Unit,
+    setActivityLevelError: (String?) -> Unit
+): Boolean {
+    var isValid = true
+
+    // 1. Name validation
+    if (name.isBlank()) {
+        setNameError("Name cannot be empty.")
+        isValid = false
+    } else {
+        setNameError(null)
+    }
+
+    // 2. Age validation
+    val ageInt = age.toIntOrNull()
+    if (ageInt == null || ageInt <= 0 || ageInt > 120) {
+        setAgeError("Please enter a valid age (1-120).")
+        isValid = false
+    } else {
+        setAgeError(null)
+    }
+
+    // 3. Gender validation
+    if (gender.isBlank()) {
+        setGenderError("Please select a gender.")
+        isValid = false
+    } else {
+        setGenderError(null)
+    }
+
+    // 4. Height validation
+    val heightFloat = height.toFloatOrNull()
+    if (heightFloat == null || heightFloat <= 0) {
+        setHeightError("Please enter a valid height (e.g., 170.5).")
+        isValid = false
+    } else {
+        setHeightError(null)
+    }
+
+    // 5. Weight validation
+    val weightFloat = weight.toFloatOrNull()
+    if (weightFloat == null || weightFloat <= 0) {
+        setWeightError("Please enter a valid weight (e.g., 70.2).")
+        isValid = false
+    } else {
+        setWeightError(null)
+    }
+
+    // 6. Fitness Goal validation
+    if (fitnessGoal.isBlank()) {
+        setFitnessGoalError("Please select a fitness goal.")
+        isValid = false
+    } else {
+        setFitnessGoalError(null)
+    }
+
+    // 7. Target Date validation (DD/MM/YYYY)
+    if (targetDate.isBlank()) {
+        setTargetDateError("Please enter a target date (DD/MM/YYYY).")
+        isValid = false
+    } else {
+        try {
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val parsedDate = LocalDate.parse(targetDate, formatter)
+            if (parsedDate.isBefore(LocalDate.now())) {
+                setTargetDateError("Target date cannot be in the past.")
+                isValid = false
+            } else {
+                setTargetDateError(null)
+            }
+        } catch (e: DateTimeParseException) {
+            setTargetDateError("Invalid date format. Use DD/MM/YYYY.")
+            isValid = false
+        }
+    }
+
+    // 8. Activity Level validation
+    if (activityLevel.isBlank()) {
+        setActivityLevelError("Please select an activity level.")
+        isValid = false
+    } else {
+        setActivityLevelError(null)
+    }
+
+    return isValid
 }
