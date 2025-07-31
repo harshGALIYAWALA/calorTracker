@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shinkatech.calortracker.View.authScreen.loginScreen.LoginScreen
 import com.shinkatech.calortracker.View.authScreen.signInScreen.SignInScreen
+import com.shinkatech.calortracker.View.mainScreens.addScreen.AddScreen
 import com.shinkatech.calortracker.View.mainScreens.discoverScreen.DiscoverScreen
 import com.shinkatech.calortracker.View.mainScreens.historyScreen.HistoryScreen
 import com.shinkatech.calortracker.View.mainScreens.homeScreen.HomeScreen
@@ -31,6 +32,7 @@ object Screen{
     const val HISTORY_SCREEN = "historyScreen"
     const val DISCOVER_SCREEN = "discoverScreen"
     const val PROFILE_SCREEN = "profileScreen"
+    const val ADD_SCREEN = "addScreen"
 }
 
 @Composable
@@ -84,6 +86,9 @@ fun MainApp() {
 
             composable(Screen.PROFILE_SCREEN) {
                 ProfileScreen(navController)
+            }
+            composable(Screen.ADD_SCREEN) {
+                AddScreen(navController)
             }
 
         }

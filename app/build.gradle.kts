@@ -80,4 +80,7 @@ dependencies {
 
     implementation ("androidx.compose.material:material-icons-extended:1.6.1")
 
+    //bottom nav app
+    implementation ("com.github.0xRahad:RioBottomNavigation:1.0.2")
+
 }

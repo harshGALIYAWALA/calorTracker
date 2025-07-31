@@ -385,7 +385,7 @@ fun LoginScreen(navController: NavHostController) {
                                                 onSucess = {
                                                     Toast.makeText(context, "login in sucessfull", Toast.LENGTH_SHORT).show()
                                                     navController.navigate(Screen.MAIN_LAYOUT){
-                                                        popUpTo(Screen.MAIN_LAYOUT){
+                                                        popUpTo(Screen.LOGIN_SCREEN){
                                                             inclusive = true
                                                         }
                                                     }
@@ -394,12 +394,6 @@ fun LoginScreen(navController: NavHostController) {
                                                     Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                                                 }
                                             )
-
-                                            navController.navigate(Screen.MAIN_LAYOUT){
-                                                popUpTo(0){
-                                                    inclusive = true
-                                                }
-                                            }
                                         }
 
                                     },

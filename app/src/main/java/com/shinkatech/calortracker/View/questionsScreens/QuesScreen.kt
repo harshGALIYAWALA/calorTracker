@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -20,6 +21,7 @@ import androidx.navigation.NavHostController
 import com.shinkatech.calortracker.ui.theme.CalorTrackerTheme
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.shinkatech.calortracker.Model.QuesDataUserModel
+import com.shinkatech.calortracker.Screen
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -103,6 +105,7 @@ fun QuesScreen(navController: NavHostController) {
                     },
                     label = { Text("Full Name") },
                     modifier = Modifier.fillMaxWidth(),
+                    textStyle = MaterialTheme.typography.bodyLarge,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
@@ -537,6 +540,24 @@ fun QuesScreen(navController: NavHostController) {
                         fontWeight = FontWeight.Bold
                     )
                 }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp), // Optional padding
+                    contentAlignment = Alignment.Center
+                ) {
+                    TextButton(
+                        onClick = {
+                            navController.navigate(Screen.LOGIN_SCREEN) {
+                                launchSingleTop = true
+                            }
+                        }
+                    ) {
+                        Text("Already have an account?")
+                    }
+                }
+
+                Spacer(modifier = Modifier.padding(16.dp))
             }
         }
     }

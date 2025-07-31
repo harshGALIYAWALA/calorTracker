@@ -45,19 +45,21 @@ fun SplashScreen(navController: NavHostController) {
     }
 
     LaunchedEffect(key1 = progress) {
-       if (progress == 1f){
-           if (auth != null) {
-               // User is logged in — navigate to Main or Home screen
-               navController.navigate(Screen.MAIN_LAYOUT) {
-                   popUpTo(Screen.MAIN_LAYOUT) { inclusive = true }
-               }
-           } else {
-               // User is not logged in — navigate to SignIn screen
-               navController.navigate(Screen.ONBOARDING_SCREEN) {
-                   popUpTo(Screen.SPLASH_SCREEN) { inclusive = true }
-               }
-           }
-       }
+        if (progress == 1f) {
+            if (auth != null) {
+                // User is logged in — navigate to Main screen and remove Splash from backstack
+                navController.navigate(Screen.MAIN_LAYOUT) {
+                    popUpTo(Screen.SPLASH_SCREEN) { inclusive = true }
+                    launchSingleTop = true
+                }
+            } else {
+                // User not logged in — navigate to Onboarding and remove Splash
+                navController.navigate(Screen.ONBOARDING_SCREEN) {
+                    popUpTo(Screen.SPLASH_SCREEN) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
     }
 
 
