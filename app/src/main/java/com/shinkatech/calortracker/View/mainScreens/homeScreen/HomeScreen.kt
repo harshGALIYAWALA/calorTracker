@@ -20,11 +20,8 @@ import androidx.navigation.NavHostController
 @Composable
 fun HomeScreen(navController: NavHostController) {
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) {
         Column(
-            modifier = Modifier.padding(it).fillMaxSize().background(Color.Red)
+            modifier = Modifier.fillMaxSize().background(Color.Red)
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -36,7 +33,6 @@ fun HomeScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.padding(top = 80.dp))
         }
 
-    }
 
 
 }

@@ -28,7 +28,7 @@ fun ProfileScreen(navController: NavHostController) {
             onClick = {
                 auth.signOut() // Log out from Firebase
                 navController.navigate(Screen.SPLASH_SCREEN) {
-                    popUpTo(Screen.SPLASH_SCREEN) { inclusive = true } // Clear backstack
+                    popUpTo(0) { inclusive = true } // Clear backstack
                 }
             }
         ) {
