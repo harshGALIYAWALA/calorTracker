@@ -12,6 +12,7 @@ import com.shinkatech.calortracker.View.authScreen.loginScreen.LoginScreen
 import com.shinkatech.calortracker.View.authScreen.signInScreen.SignInScreen
 import com.shinkatech.calortracker.View.mainScreens.addScreen.AddScreen
 import com.shinkatech.calortracker.View.mainScreens.discoverScreen.DiscoverScreen
+import com.shinkatech.calortracker.View.mainScreens.discoverScreen.components.MealDetailScreen
 import com.shinkatech.calortracker.View.mainScreens.historyScreen.HistoryScreen
 import com.shinkatech.calortracker.View.mainScreens.homeScreen.HomeScreen
 import com.shinkatech.calortracker.View.mainScreens.mainLayout.MainLayout
@@ -33,6 +34,7 @@ object Screen{
     const val DISCOVER_SCREEN = "discoverScreen"
     const val PROFILE_SCREEN = "profileScreen"
     const val ADD_SCREEN = "addScreen"
+    const val MEAL_DETAIL_SCREEN = "mealDetailScreen"
 }
 
 @Composable
@@ -90,7 +92,9 @@ fun MainApp() {
             composable(Screen.ADD_SCREEN) {
                 AddScreen(navController)
             }
-
+            composable(Screen.MEAL_DETAIL_SCREEN) {
+                MealDetailScreen(navController)
+            }
         }
     }
 

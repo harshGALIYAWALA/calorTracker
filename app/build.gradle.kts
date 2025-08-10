@@ -83,4 +83,7 @@ dependencies {
     //bottom nav app
     implementation ("com.github.0xRahad:RioBottomNavigation:1.0.2")
 
+    //bottomSheet
+    implementation("androidx.compose.material3:material3:1.2.1") // or latest
+
 }
